@@ -17,12 +17,11 @@ HTML :
 <!DOCTYPE html>
 <html>
 <head>
-<script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
-<script src="https://apis.google.com/js/client.js?onload=init"></script>
   <meta charset="utf-8">
-  <title>JS Bin</title>
+  <title>Youtube Api v3</title>
 </head>
 <body>
+    <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
     <script src="https://apis.google.com/js/client.js?onload=googleApiClientReady"></script>
 </body>
 </html>
@@ -51,7 +50,6 @@ function googleApiClientReady() {
 
         request.execute(function(response) {
           console.log(response);
-          getThumbnails(response);
         });
 
     });
@@ -62,64 +60,70 @@ function googleApiClientReady() {
 
 ### O resultado mostrará no console;
 
+# Resultado [JsFiddle](http://jsfiddle.net/dayvson009/ks6Lhuqa/2/)
+
 ## No código abaixo eu criei uma função para me retornar as Imagens e o link do youtube:
 
 Código Completo :
 
 
 ``` html
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
-<script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
-<script src="https://apis.google.com/js/client.js?onload=init"></script>
   <meta charset="utf-8">
-  <title>JS Bin</title>
+  <title>Api Youtube v3</title>
 </head>
 <body>
-
   <div id="thumbnail"></div>
+  
+  <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+  
   <script>
 
-function googleApiClientReady() {
+    function googleApiClientReady() {
 
-    var apiKey = 'AIzaSyCZfHRnq7tigC-COeQRmoa9Cxr0vbrK6xw';
+        var apiKey = 'AIzaSyCZfHRnq7tigC-COeQRmoa9Cxr0vbrK6xw';
 
-    gapi.client.setApiKey(apiKey);
-    gapi.client.load('youtube', 'v3', function() {
+        gapi.client.setApiKey(apiKey);
+        gapi.client.load('youtube', 'v3', function() {
 
-        request = gapi.client.youtube.search.list({
-            part: 'id, snippet',
-            channelId: 'UCBN8Rqu2nSsXX_6UCZp5jLQ',
-            order: 'date',
-            type: 'video',
-            maxResults: '40'
+            request = gapi.client.youtube.search.list({
+                part: 'id, snippet',
+                channelId: 'UCBN8Rqu2nSsXX_6UCZp5jLQ',
+                order: 'date',
+                type: 'video',
+                maxResults: '40'
+
+            });
+
+            request.execute(function(response) {
+              console.log(response)
+              getThumbnails(response.items);
+            });
+
+            function getThumbnails(item) {
+
+              elementLink = document.querySelector('#thumbnail')
+
+              for (var i = 0; i < item.length; i++) {
+
+                elementLink.innerHTML += '<a href="https://www.youtube.com/watch?v='+item[i].id.videoId+'">'+item[i].id.videoId+'</a><br>';
+                elementLink.innerHTML += '<img src="'+item[i].snippet.thumbnails.default.url+'"><br>';
+                elementLink.innerHTML += '<img src="'+item[i].snippet.thumbnails.high.url+'"><br>';
+                elementLink.innerHTML += '<img src="'+item[i].snippet.thumbnails.medium.url+'"><br>';
+
+              };
+            };
 
         });
 
-        request.execute(function(response) {
-          getThumbnails(response.items);
-        });
-
-        function getThumbnails(item) {
-
-          elementLink = document.querySelector('#thumbnail')
-
-          for (var i = 0; i < item.length; i++) {
-
-            elementLink.innerHTML += '<a href="https://www.youtube.com/watch?v='+item[i].id.videoId+'">'+item[i].id.videoId+'</a><br>';
-            elementLink.innerHTML += '<img src="'+item[i].snippet.thumbnails.default.url+'"><br>';
-            elementLink.innerHTML += '<img src="'+item[i].snippet.thumbnails.high.url+'"><br>';
-            elementLink.innerHTML += '<img src="'+item[i].snippet.thumbnails.medium.url+'"><br>';
-
-          };
-        };
-
-    });
-
-}
+    }
   </script>
-    <script src="https://apis.google.com/js/client.js?onload=googleApiClientReady"></script>
+
+  <script src="https://apis.google.com/js/client.js?onload=googleApiClientReady"></script>
+
 </body>
 </html>
+
 ```
